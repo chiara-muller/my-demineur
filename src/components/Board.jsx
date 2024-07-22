@@ -24,7 +24,6 @@ export default function Board ({grid}) {
 }
 
 const BoardStyled = styled.div`
-  display: flex;
-  width: 300px;
+  display: inline-flex;
   border: 2px solid black;
 `;
