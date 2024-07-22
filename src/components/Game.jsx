@@ -14,30 +14,16 @@ const Game = () =>  {
   }
 
   const handleCellClicked = (row, col) => {
-    const newGrid = grid.map((rowArr, rowIndex) =>
-      rowArr.map((cell, colIndex) => {
-          if (rowIndex === row && colIndex === col) {
-              return { ...cell, clicked: true };
-          }
-          return cell;
-      })
-  );
-
-  setGrid(newGrid);
+    const newGrid = JSON.parse(JSON.stringify(grid));
+    if (newGrid[row][col].clicked || newGrid[row][col].flagged) return;
+    newGrid[row][col].clicked = true;
+    setGrid(newGrid);
   }
 
   const handleCellContextMenu = (row, col) => {
-    const newGrid = grid.map((rowArr, rowIndex) =>
-        rowArr.map((cell, colIndex) => {
-            if (rowIndex === row && colIndex === col) {
-                return { ...cell, flagged: !cell.flagged };
-            }
-            return cell;
-        })
-    );
-
+    const newGrid = JSON.parse(JSON.stringify(grid));
+    newGrid[row][col].flagged = !newGrid[row][col].flagged;
     setGrid(newGrid);
-
   }
 
   return (
