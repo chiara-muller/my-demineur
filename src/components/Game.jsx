@@ -13,6 +13,33 @@ const Game = () =>  {
     setGrid(createGrid(rows, cols))
   }
 
+  const handleCellClicked = (row, col) => {
+    const newGrid = grid.map((rowArr, rowIndex) =>
+      rowArr.map((cell, colIndex) => {
+          if (rowIndex === row && colIndex === col) {
+              return { ...cell, clicked: true };
+          }
+          return cell;
+      })
+  );
+
+  setGrid(newGrid);
+  }
+
+  const handleCellContextMenu = (row, col) => {
+    const newGrid = grid.map((rowArr, rowIndex) =>
+        rowArr.map((cell, colIndex) => {
+            if (rowIndex === row && colIndex === col) {
+                return { ...cell, flagged: !cell.flagged };
+            }
+            return cell;
+        })
+    );
+
+    setGrid(newGrid);
+
+  }
+
   return (
     <GameStyled>
       <form onSubmit={handleFormSubmit}>
@@ -20,7 +47,11 @@ const Game = () =>  {
         <input type="number" placeholder="Nombre de colonne" value={cols} onChange={(e) => setCols(Number(e.target.value))}/>
         <button type="submit">Crée ta grille</button>
       </form>
-      <Board grid={grid}/>
+      <Board
+        grid={grid}
+        onCellClicked={handleCellClicked}
+        onCellContextMenu={handleCellContextMenu}
+      />
     </GameStyled>
   )
 

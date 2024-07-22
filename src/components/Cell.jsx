@@ -1,21 +1,22 @@
-import React, { useState } from 'react'
 import styled from 'styled-components'
 
-export default function Cells({value, clicked, flagged}) {
+export default function Cells({onClick, onContextMenu, value, clicked, flagged}) {
 
-  const [cell, setCell] = useState('')
+  let displayValue = '';
+  if (clicked) {
+      displayValue = value;
+  } else if (flagged) {
+      displayValue = '🚩';
+  }
 
-  const handleClick = () => {
-    if (clicked) {
-      setCell(value)
-    } else if (flagged) {
-      setCell('🚩')
-    }
+  const handleContextMenu = (e) => {
+    e.preventDefault()
+    onContextMenu()
   }
 
   return (
-    <CellStyled onClick={handleClick}>
-      {cell}
+    <CellStyled onClick={onClick} onContextMenu={handleContextMenu}>
+      {displayValue}
     </CellStyled>
   )
 }
