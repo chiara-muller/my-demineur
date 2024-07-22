@@ -11,9 +11,6 @@ export default function Board ({grid}) {
           {row.map((cell, colIndex) => (
             <Cell
               key={colIndex}
-              value={cell.value}
-              open={cell.open}
-              flagged={cell.flagged}
             />
           ))}
         </div>
