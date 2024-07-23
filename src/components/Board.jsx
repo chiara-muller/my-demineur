@@ -14,6 +14,7 @@ export default function Board ({grid, onCellClicked, onCellContextMenu}) {
               value={cell.value}
               clicked={cell.clicked}
               flagged={cell.flagged}
+              mine={cell.mine}
               onClick={() => onCellClicked(rowIndex, colIndex)}
               onContextMenu={() => onCellContextMenu(rowIndex, colIndex)}
             />

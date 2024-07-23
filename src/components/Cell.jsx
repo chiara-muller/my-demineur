@@ -1,14 +1,15 @@
 import styled from 'styled-components'
 
-export default function Cells({onClick, onContextMenu, value, clicked, flagged}) {
+export default function Cells({onClick, onContextMenu, value, mine, clicked, flagged}) {
 
   let displayValue = '';
   if (clicked) {
       displayValue = value;
+  } else if (mine) {
+    displayValue = '💣'
   } else if (flagged) {
-      displayValue = '🚩';
+    displayValue = '🚩';
   }
-
   const handleContextMenu = (e) => {
     e.preventDefault()
     onContextMenu()
