@@ -16,7 +16,7 @@ const Game = () =>  {
 
   const handleCellClicked = (row, col) => {
     const newGrid = JSON.parse(JSON.stringify(grid));
-    if (newGrid[row][col].clicked || newGrid[row][col].flagged || newGrid[row][col].mine) return;
+    if (newGrid[row][col].clicked || newGrid[row][col].flagged) return;
     newGrid[row][col].clicked = true;
     setGrid(newGrid);
   }
