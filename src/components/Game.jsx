@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
-import Board from './Board'
 import styled from 'styled-components'
+import Board from './Board'
 
 const Game = () =>  {
 
@@ -63,14 +63,32 @@ const createGrid = (rows, cols, mines) => {
     let row = Math.floor(Math.random() * rows);
     let col = Math.floor(Math.random() * cols);
 
-    console.log(row)
     if (!grid[row][col].mine) {
       grid[row][col].mine = true;
       minesToPlace--;
     }
   }
 
-  console.log(grid);
+  const updateAdjacentCells = (grid, row, col) => {
+    for (let i = -1; i <= 1; i++) {
+      for (let j = -1; j <= 1; j++) {
+        let newRow = row + i;
+        let newCol = col + j;
+        if (newRow >= 0 && newRow < rows && newCol >= 0 && newCol < cols && !(i === 0 && j === 0)) {
+          grid[newRow][newCol].value++;
+        }
+      }
+    }
+  };
+
+  for (let i = 0; i < cols; i++) {
+    for (let j = 0; j < rows; j++) {
+      if (grid[i][j].mine) {
+        updateAdjacentCells(grid, i, j);
+      }
+    }
+  }
+
   return grid;
 }
 
@@ -82,4 +100,9 @@ const GameStyled = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+
+  form {
+    display: flex;
+    flex-direction: column;
+  }
 `;
