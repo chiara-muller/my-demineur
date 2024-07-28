@@ -4,16 +4,15 @@ export default function Cells({onClick, onContextMenu, value, mine, clicked, fla
 
   let displayValue = '';
   if (clicked) {
-      if (mine) {
-        displayValue = '💣'
-      } else {
-        displayValue = value;
-      }
-  } else if (clicked && mine) {
-    displayValue = '💣'
+    if (mine) {
+      displayValue = '💣';
+    } else {
+      displayValue = value;
+    }
   } else if (flagged) {
     displayValue = '🚩';
   }
+
   const handleContextMenu = (e) => {
     e.preventDefault()
     onContextMenu()

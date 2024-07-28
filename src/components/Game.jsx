@@ -7,6 +7,7 @@ const Game = () =>  {
   const [rows, setRows] = useState(10)
   const [cols, setCols] = useState(10)
   const [mines, setMines] = useState(10)
+  const [gameOver, setGameOver] = useState(false)
   const [grid, setGrid] = useState(createGrid(rows, cols, mines))
 
   const handleFormSubmit = (e) => {
@@ -14,14 +15,34 @@ const Game = () =>  {
     setGrid(createGrid(rows, cols, mines))
   }
 
-  const handleCellClicked = (row, col) => {
+  const revealAllMines = (grid) => {
     const newGrid = JSON.parse(JSON.stringify(grid));
-    if (newGrid[row][col].clicked || newGrid[row][col].flagged) return;
+    for (let i = 0; i < newGrid.length; i++) {
+      for (let j = 0; j < newGrid[i].length; j++) {
+        if (newGrid[i][j].mine) {
+          newGrid[i][j].clicked = true;
+        }
+      }
+    }
+    return newGrid;
+  };
+
+  const handleCellClicked = (row, col) => {
+    if (gameOver || grid[row][col].clicked || grid[row][col].flagged) return;
+
+    const newGrid = JSON.parse(JSON.stringify(grid));
     newGrid[row][col].clicked = true;
-    setGrid(newGrid);
-  }
+
+    if (newGrid[row][col].mine) {
+      setGameOver(true);
+      setGrid(revealAllMines(newGrid));
+    } else {
+      setGrid(newGrid);
+    }
+  };
 
   const handleCellContextMenu = (row, col) => {
+    if (gameOver || grid[row][col].clicked) return;
     const newGrid = JSON.parse(JSON.stringify(grid));
     newGrid[row][col].flagged = !newGrid[row][col].flagged;
     setGrid(newGrid);
