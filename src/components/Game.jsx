@@ -48,6 +48,11 @@ const Game = () =>  {
     setGrid(newGrid);
   }
 
+  const onRefreshClick = () => {
+    setGrid(createGrid(rows, cols, mines))
+    setGameOver(false)
+  }
+
   return (
     <GameStyled>
       <form onSubmit={handleFormSubmit}>
@@ -58,6 +63,7 @@ const Game = () =>  {
         <label>Nombre de mine:</label>
         <input type="number" value={mines} onChange={(e) => setMines(Number(e.target.value))}/>
         <button type="submit">Crée ta grille</button>
+        <button onClick={onRefreshClick}>Refresh</button>
       </form>
       <Board
         grid={grid}
