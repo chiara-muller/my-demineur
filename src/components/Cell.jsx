@@ -7,7 +7,11 @@ export default function Cells({onClick, onContextMenu, value, mine, clicked, fla
     if (mine) {
       displayValue = '💣';
     } else {
-      displayValue = value;
+      if (value === 0) {
+        displayValue = ''
+      } else {
+        displayValue = value;
+      }
     }
   } else if (flagged) {
     displayValue = '🚩';
@@ -19,7 +23,7 @@ export default function Cells({onClick, onContextMenu, value, mine, clicked, fla
   }
 
   return (
-    <CellStyled onClick={onClick} onContextMenu={handleContextMenu}>
+    <CellStyled onClick={onClick} onContextMenu={handleContextMenu} clicked={clicked}>
       {displayValue}
     </CellStyled>
   )
@@ -28,6 +32,6 @@ export default function Cells({onClick, onContextMenu, value, mine, clicked, fla
 const CellStyled = styled.div`
   width: 25px;
   height: 25px;
-  border: 1px solid black;
-  background-color: grey;
+  border: 1px solid white;
+  background-color: ${({ clicked }) => clicked ? '#fcf6bd' : '#d0f4de'};
 `;

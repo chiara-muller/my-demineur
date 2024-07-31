@@ -28,5 +28,5 @@ export default function Board ({grid, onCellClicked, onCellContextMenu}) {
 
 const BoardStyled = styled.div`
   display: inline-flex;
-  border: 2px solid black;
+  justify-content: center;
 `;
