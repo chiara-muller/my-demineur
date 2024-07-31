@@ -10,11 +10,6 @@ const Game = () =>  {
   const [gameOver, setGameOver] = useState(false)
   const [grid, setGrid] = useState(createGrid(rows, cols, mines))
 
-  const handleFormSubmit = (e) => {
-    e.preventDefault()
-    setGrid(createGrid(rows, cols, mines))
-  }
-
   const revealAllMines = (grid) => {
     const newGrid = JSON.parse(JSON.stringify(grid));
     for (let i = 0; i < newGrid.length; i++) {
@@ -27,15 +22,45 @@ const Game = () =>  {
     return newGrid;
   };
 
+  const revealAdjacentCells = (grid, row, col) => {
+    const stack = [[row, col]];
+    const newGrid = JSON.parse(JSON.stringify(grid));
+
+    while (stack.length > 0) {
+      const [currentRow, currentCol] = stack.pop();
+      for (let i = -1; i <= 1; i++) {
+        for (let j = -1; j <= 1; j++) {
+          const newRow = currentRow + i;
+          const newCol = currentCol + j;
+          if (
+            newRow >= 0 && newRow < newGrid.length &&
+            newCol >= 0 && newCol < newGrid[0].length &&
+            !newGrid[newRow][newCol].clicked &&
+            !newGrid[newRow][newCol].flagged
+          ) {
+            newGrid[newRow][newCol].clicked = true;
+            if (newGrid[newRow][newCol].value === 0 && !newGrid[newRow][newCol].mine) {
+              stack.push([newRow, newCol]);
+            }
+          }
+        }
+      }
+    }
+    return newGrid;
+  };
+
   const handleCellClicked = (row, col) => {
     if (gameOver || grid[row][col].clicked || grid[row][col].flagged) return;
 
-    const newGrid = JSON.parse(JSON.stringify(grid));
+    let newGrid = JSON.parse(JSON.stringify(grid));
     newGrid[row][col].clicked = true;
 
     if (newGrid[row][col].mine) {
       setGameOver(true);
       setGrid(revealAllMines(newGrid));
+    } else if (newGrid[row][col].value === 0) {
+      newGrid = revealAdjacentCells(newGrid, row, col);
+      setGrid(newGrid);
     } else {
       setGrid(newGrid);
     }
@@ -48,23 +73,27 @@ const Game = () =>  {
     setGrid(newGrid);
   }
 
+  const onGameSettings = (newRows, newCols, newMines) => {
+    setRows(newRows);
+    setCols(newCols);
+    setMines(newMines);
+    setGrid(createGrid(newRows, newCols, newMines));
+    setGameOver(false);
+  }
+
   const onRefreshClick = () => {
-    setGrid(createGrid(rows, cols, mines))
-    setGameOver(false)
+    setGrid(createGrid(rows, cols, mines));
+    setGameOver(false);
   }
 
   return (
     <GameStyled>
-      <form onSubmit={handleFormSubmit}>
-        <label>Nombre de ligne:</label>
-        <input type="number" value={rows} onChange={(e) => setRows(Number(e.target.value))}/>
-        <label>Nombre de colonne:</label>
-        <input type="number" value={cols} onChange={(e) => setCols(Number(e.target.value))}/>
-        <label>Nombre de mine:</label>
-        <input type="number" value={mines} onChange={(e) => setMines(Number(e.target.value))}/>
-        <button type="submit">Crée ta grille</button>
-        <button onClick={onRefreshClick}>Refresh</button>
-      </form>
+      <div className="button-container">
+        <button onClick={() => onGameSettings(10, 10, 10)}>Easy</button>
+        <button onClick={() => onGameSettings(20, 20, 40)}>Medium</button>
+        <button onClick={() => onGameSettings(30, 16, 99)}>Hard</button>
+        <button onClick={onRefreshClick}>😵</button>
+      </div>
       <Board
         grid={grid}
         onCellClicked={handleCellClicked}
@@ -72,7 +101,6 @@ const Game = () =>  {
       />
     </GameStyled>
   )
-
 }
 
 const createGrid = (rows, cols, mines) => {
@@ -108,8 +136,8 @@ const createGrid = (rows, cols, mines) => {
     }
   };
 
-  for (let i = 0; i < cols; i++) {
-    for (let j = 0; j < rows; j++) {
+  for (let i = 0; i < rows; i++) {
+    for (let j = 0; j < cols; j++) {
       if (grid[i][j].mine) {
         updateAdjacentCells(grid, i, j);
       }
@@ -128,7 +156,7 @@ const GameStyled = styled.div`
   justify-content: center;
   align-items: center;
 
-  form {
+  .button-container {
     display: flex;
     flex-direction: column;
   }
