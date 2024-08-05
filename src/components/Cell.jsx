@@ -30,6 +30,9 @@ export default function Cells({onClick, onContextMenu, value, mine, clicked, fla
 }
 
 const CellStyled = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
   width: 25px;
   height: 25px;
   border: 1px solid white;
